@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            @if($post->image)
+            @if($post->image != "[]")
                 <div class="container col-9">
                     <div class="row m-2">
                         @foreach(json_decode($post->image) as $key => $image)
@@ -38,7 +38,9 @@
                     </div>
                 </div>
                 @else
-                <p>no images to this post</p>
+                <div class="col-9 d-flex justify-content-center align-items-center">
+                    <h6>no images to this post</h6>
+                </div>
             @endif
         </div>
         <br>
