@@ -16,7 +16,8 @@
         <textarea name="description" class="form-control mb-2" placeholder="write your post description"></textarea>
     </div>
     <div class="form-group m-4">
-        <input type="file" class="form-control-file mb-2" name="image">
+        <input type="file" class="form-control-file mb-2" name="images[]" multiple>
+        <p>to select more than one file : hold ctrl then select</p>
     </div>
     <button type="submit" class="btn btn-primary mx-4">Submit</button>
 </form>

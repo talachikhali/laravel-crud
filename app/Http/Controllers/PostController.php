@@ -7,57 +7,68 @@ use App\Models\Post;
 
 class PostController extends Controller
 {
-    function index(){
+    function index()
+    {
         $posts = Post::all();
-        return view('posts.index',compact('posts'));
+        return view('posts.index', compact('posts'));
     }
 
-    function create(){
+    function create()
+    {
         return view('posts.create');
     }
-    function store(Request $request){
-        if($request->hasFile('image')){
-            $imageName = $request->file('image')->getClientOriginalName() . "-" . time() . $request->file('image')->getClientOriginalExtension();
+    function store(Request $request)
+    {
+        $images = [];
+        if ($request->hasFile('images')) {
 
-            $request->file('image')->move(public_path('/images/posts' ), $imageName);
+            foreach ($request->file('images') as $image) {
+                $imageName = $image->getClientOriginalName() . "-" . time() . $image->getClientOriginalExtension();
+                $image->move(public_path('/images/posts'), $imageName);
+                array_push($images, $imageName);
+            }
         }
-        else{
-            $imageName = 'no image to display';
-        }
-        post::create([
+        $post = post::create(attributes: [
             "title" => $request->title,
             "description" => $request->description,
-            "image" => $imageName
+            "image" => json_encode($images)
         ]);
-
         return redirect()->route("posts.index");
 
     }
-    function show(Post $post){
-        return view('posts.show' , compact('post'));
+    function show(Post $post)
+    {
+        return view('posts.show', compact('post'));
     }
-    function update(Request $request, Post $post){
-
-        if($request->hasFile('image')){
-            $imageName = $request->file('image')->getClientOriginalName() . "-" . time() . $request->file('image')->getClientOriginalExtension();
-
-            $request->file('image')->move(public_path('/images/posts' ), $imageName);
-        }else{
-            $imageName = $post->image;
+    function update(Request $request, Post $post)
+    {
+        $images = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imageName = $image->getClientOriginalName() . "-" . time() . $image->getClientOriginalExtension();
+                $image->move(public_path('/images/posts'), $imageName);
+                array_push($images, $imageName);
+            }
+        }else {
+            foreach(json_decode($post->image) as $key => $image){          
+            $images [] = $image;
+            }
         }
 
         $post->update([
-            'title' => $request->title, 
+            'title' => $request->title,
             'description' => $request->description,
-            'image' => $imageName
+            'image' => json_encode($images)
         ]);
-    
-        return redirect()->route('posts.index'); 
+
+        return redirect()->route('posts.index');
     }
-    function edit(Post $post){
+    function edit(Post $post)
+    {
         return view('posts.edit', compact('post'));
     }
-    function destroy(Post $post){
+    function destroy(Post $post)
+    {
         $post->delete();
         return redirect()->route('posts.index');
     }

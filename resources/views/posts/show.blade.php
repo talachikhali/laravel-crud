@@ -5,7 +5,7 @@
 @section('content')
 <h1 class="m-5">{{$post->title}}</h1>
 <div class="d-flex justify-content-start">
-    
+
     <div class="m-5">
         <p class="text-center lead">
             {{ $post->description }}
@@ -23,7 +23,17 @@
         </div>
     </div>
     <div class="m-5">
-    <img class="rounded mx-auto d-block" src=" /images/posts/{{$post->image}}" alt="no image to show">
+        @if($post->image)
+            <div class="container">
+                <div class="row">
+                    @foreach(json_decode($post->image) as $key => $image)
+                        <div class="col-md-4">
+                            <img src=" /images/posts/{{$image}}" class="img-fluid" alt="">
+                        </div>
+                    @endforeach
+                </div>
+        @endif
+        </div>
     </div>
 </div>
 
