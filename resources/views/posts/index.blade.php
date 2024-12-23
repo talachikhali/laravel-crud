@@ -5,7 +5,16 @@
 @section('content')
 
 <div class="d-flex justify-content-center">
-<a href="{{route('posts.create')}}" class="btn btn-secondary m-3 ">add new post</a>
+    <form action="{{route('logout')}}" method="post" class="d-flex justify-content-center">
+        @csrf
+        <input type="submit" value="logout" class="btn btn-danger m-3 ">
+    </form>
+    <div>
+        <a href="{{route('posts.create')}}" class="btn btn-secondary m-3 ">add new post</a>
+    </div>
+    <div>
+        <a href="{{route('users.index')}}" class="btn btn-secondary m-3 ">show users</a>
+    </div>
 </div>
 
 @forelse($posts as $post)
@@ -18,12 +27,13 @@
                             href="{{ route('posts.show', $post->id)}}">{{ $post->title }}</a></h5>
                     <p class="text-center">{{$post->description}}</p>
                     <div class="d-flex justify-content-center">
-                        <a href="{{route('posts.edit', $post)}}" class="btn btn-primary m-1">Update</a>
+                        <a href="{{route('posts.edit', $post)}}" class="btn btn-primary m-1">Update</a>   
                         <form action="{{ route('posts.destroy', $post) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger m-1">Delete</button>
-                        </form>
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger m-1">Delete</button>
+                            </form>
+                            
                     </div>
                 </div>
             </div>
@@ -37,7 +47,7 @@
                         @endforeach
                     </div>
                 </div>
-                @else
+            @else
                 <div class="col-9 d-flex justify-content-center align-items-center">
                     <h6>no images to this post</h6>
                 </div>
@@ -46,8 +56,8 @@
         <br>
     </div>
 @empty
-<div class="d-flex justify-content-center">
-    <h1 >there is no posts</h1>
+    <div class="d-flex justify-content-center">
+        <h1>there is no posts</h1>
     </div>
 @endforelse
 

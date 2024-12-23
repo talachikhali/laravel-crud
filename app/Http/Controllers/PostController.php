@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Gate;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\File;
-
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -30,7 +31,7 @@ class PostController extends Controller
                 array_push($images, $imageName);
             }
         }
-        $post = post::create(attributes: [
+        post::create(attributes: [
             "title" => $request->title,
             "description" => $request->description,
             "image" => json_encode($images)
@@ -74,9 +75,10 @@ class PostController extends Controller
     function edit(Post $post)
     {
         return view('posts.edit', compact('post'));
-    }
+    }  
     function destroy(Post $post)
     {
+        Gate::authorize('manageUser',User::class);
         foreach(json_decode($post->image,true) as $key => $image){
             $image_path = public_path('/images/posts/' . $image);
                 if(File::exists($image_path)){
